@@ -6,7 +6,6 @@ FastAPI app with all endpoints: /predict, /explain, /datasets, /health
 from __future__ import annotations
 
 import os
-from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
@@ -33,12 +32,11 @@ MODELS_DIR = _THIS_DIR.parent / "molgraphiq_models"
 registry = ModelRegistry(models_dir=str(MODELS_DIR), device="cpu")
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Load all models at startup."""
-    registry.load_all()
-    yield
-    # No teardown needed
+def get_registry() -> ModelRegistry:
+    """Lazily load all models on the first call."""
+    if not registry.models:
+        registry.load_all()
+    return registry
 
 
 # ──────────────────────────────────────────────────────────────
@@ -49,7 +47,6 @@ app = FastAPI(
     title="MolGraphIQ API",
     description="Knowledge-Augmented GNN inference for molecular property prediction.",
     version="1.0.0",
-    lifespan=lifespan,
 )
 
 app.add_middleware(
@@ -110,7 +107,7 @@ def _validate_inputs(smiles: str, dataset: str):
             detail=f"Unknown dataset '{dataset}'. Valid options: {valid}",
         )
 
-    if dataset not in registry.models:
+    if dataset not in get_registry().models:
         raise HTTPException(
             status_code=503,
             detail=f"Model for dataset '{dataset}' is not loaded. Check server logs.",
@@ -134,6 +131,11 @@ def _validate_inputs(smiles: str, dataset: str):
 def health():
     """Server health check."""
     return {"status": "ok", "models_loaded": len(registry.models)}
+
+
+@app.on_event("startup")
+async def startup_event():
+    pass  # Models are loaded lazily on first request
 
 
 @app.post("/debug-explain")
@@ -207,7 +209,7 @@ def predict(req: PredictRequest):
     _validate_inputs(smiles, dataset)
 
     try:
-        result = registry.predict(smiles, dataset)
+        result = get_registry().predict(smiles, dataset)
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))
     except Exception as e:
@@ -229,7 +231,7 @@ def explain_endpoint(req: ExplainRequest):
     _validate_inputs(smiles, dataset)
 
     try:
-        model, data = registry.get_model_and_data(smiles, dataset)
+        model, data = get_registry().get_model_and_data(smiles, dataset)
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))
 
@@ -242,7 +244,7 @@ def explain_endpoint(req: ExplainRequest):
 
     # Also compute the prediction value
     try:
-        pred_result = registry.predict(smiles, dataset)
+        pred_result = get_registry().predict(smiles, dataset)
     except Exception:
         pred_result = {"prediction": 0.0}
 
