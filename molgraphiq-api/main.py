@@ -11,6 +11,8 @@ from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 from .predictor import ModelRegistry, DATASET_CONFIGS
@@ -250,6 +252,23 @@ def explain_endpoint(req: ExplainRequest):
         atom_importance=result["atom_importance"],
         atom_symbols=result["atom_symbols"],
     )
+
+
+# ──────────────────────────────────────────────────────────────
+# Serve React frontend (only when dist/ exists after npm run build)
+# ──────────────────────────────────────────────────────────────
+
+dist_path = os.path.join(os.path.dirname(__file__), "..", "dist")
+if os.path.exists(dist_path):
+    app.mount("/assets", StaticFiles(directory=os.path.join(dist_path, "assets")), name="assets")
+
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str):
+        """SPA fallback — serve index.html for all non-API routes."""
+        file_path = os.path.join(dist_path, full_path)
+        if os.path.isfile(file_path):
+            return FileResponse(file_path)
+        return FileResponse(os.path.join(dist_path, "index.html"))
 
 
 # ──────────────────────────────────────────────────────────────
