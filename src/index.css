@@ -1,0 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CSS Custom Properties ───────────────────────────────────
+   #F4F0E4  warm cream text
+   #44A194  jade teal — primary accent
+   #537D96  steel blue — secondary accent
+   #EC8F8D  salmon coral — highlight / CTA
+──────────────────────────────────────────────────────────── */
+:root {
+  --color-bg: #061E29;
+  --color-bg-card: #0d2230;
+  --color-accent: #44A194;
+  --color-accent-blue: #537D96;
+  --color-accent-coral: #EC8F8D;
+  --color-text: #F4F0E4;
+  --color-muted: rgba(244, 240, 228, 0.55);
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+    min-height: 100vh;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-bg);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(68, 161, 148, 0.40);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(68, 161, 148, 0.65);
+  }
+}
+
+@layer components {
+  .glass-card {
+    background: rgba(83, 125, 150, 0.10);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(244, 240, 228, 0.10);
+    border-radius: 16px;
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300;
+  }
+
+  .glass-card-hover:hover {
+    background: rgba(83, 125, 150, 0.18);
+    border-color: rgba(244, 240, 228, 0.18);
+    box-shadow: 0 0 30px rgba(68, 161, 148, 0.10);
+  }
+
+  /* Primary button — jade → steel blue gradient */
+  .btn-primary {
+    background: linear-gradient(135deg, #44A194 0%, #537D96 100%);
+    color: #F4F0E4;
+    font-weight: 600;
+    padding: 0.75rem 2rem;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.02em;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(68, 161, 148, 0.38);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0px);
+  }
+
+  /* Outline button */
+  .btn-outline {
+    background: transparent;
+    color: #44A194;
+    font-weight: 600;
+    padding: 0.75rem 2rem;
+    border-radius: 10px;
+    border: 1px solid rgba(68, 161, 148, 0.45);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.02em;
+  }
+
+  .btn-outline:hover {
+    background: rgba(68, 161, 148, 0.10);
+    border-color: #44A194;
+    box-shadow: 0 0 20px rgba(68, 161, 148, 0.18);
+    transform: translateY(-2px);
+  }
+
+  /* Text gradient — cream → jade → coral */
+  .text-gradient {
+    background: linear-gradient(135deg, #F4F0E4 0%, #44A194 55%, #EC8F8D 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Input styles */
+  .input-glass {
+    background: rgba(83, 125, 150, 0.12);
+    border: 1px solid rgba(244, 240, 228, 0.12);
+    border-radius: 10px;
+    color: #F4F0E4;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    outline: none;
+  }
+
+  .input-glass:focus {
+    border-color: rgba(68, 161, 148, 0.60);
+    box-shadow: 0 0 0 3px rgba(68, 161, 148, 0.12);
+  }
+
+  .input-glass::placeholder {
+    color: rgba(244, 240, 228, 0.28);
+  }
+
+  select.input-glass {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+  }
+
+  /* Accent divider */
+  .divider-cyan {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(68, 161, 148, 0.40), transparent);
+  }
+}
+
+@layer utilities {
+  .text-muted {
+    color: rgba(244, 240, 228, 0.55);
+  }
+
+  .border-glass {
+    border-color: rgba(244, 240, 228, 0.10);
+  }
+
+  .glow-cyan {
+    box-shadow: 0 0 20px rgba(68, 161, 148, 0.22);
+  }
+
+  .bg-navy-950 {
+    background-color: #061E29;
+  }
+}

@@ -1,0 +1,31 @@
+# MolGraphIQ API — Python Dependencies
+#
+# Run server with:
+#   cd /Users/yenulibimanya/IIT/FYP
+#   python -m uvicorn molgraphiq-api.main:app --reload --port 8000
+#
+# Or directly:
+#   python molgraphiq-api/main.py
+
+# Web framework
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.0
+pydantic>=2.6.0
+
+# HTTP client
+requests>=2.31.0
+
+# Numerics
+numpy>=1.24.0
+
+# Deep learning — use versions matching your trained models
+torch>=2.0.0
+# torch-geometric + sparse/scatter must match your torch version exactly
+# See: https://pytorch-geometric.readthedocs.io/en/latest/install/installation.html
+torch-geometric>=2.4.0
+torch-scatter>=2.1.0
+torch-sparse>=0.6.18
+
+# Cheminformatics
+deepchem>=2.7.0
+rdkit>=2023.3.1
