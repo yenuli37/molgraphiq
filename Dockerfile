@@ -11,10 +11,11 @@ RUN apt-get update && apt-get install -y \
     libx11-6 \
     && rm -rf /var/lib/apt/lists/*
 
+RUN pip install --no-cache-dir numpy==1.26.4
 RUN pip install --no-cache-dir torch==2.1.0 --index-url https://download.pytorch.org/whl/cpu
 RUN pip install --no-cache-dir torch-geometric==2.4.0
 RUN pip install --no-cache-dir torch-scatter torch-sparse -f https://data.pyg.org/whl/torch-2.1.0+cpu.html
-RUN pip install --no-cache-dir fastapi uvicorn pydantic requests numpy rdkit deepchem
+RUN pip install --no-cache-dir fastapi uvicorn pydantic requests rdkit deepchem
 
 COPY molgraphiq-api/ ./molgraphiq_api/
 COPY molgraphiq_models/ ./molgraphiq_models/
