@@ -5,10 +5,20 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
-COPY molgraphiq-api/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install PyTorch CPU version first
+RUN pip install --no-cache-dir torch==2.1.0 --index-url https://download.pytorch.org/whl/cpu
+
+# Install PyG
+RUN pip install --no-cache-dir torch-geometric==2.4.0
+
+# Install torch-scatter and torch-sparse from PyG wheels
+RUN pip install --no-cache-dir torch-scatter torch-sparse -f https://data.pyg.org/whl/torch-2.1.0+cpu.html
+
+# Install remaining dependencies
+RUN pip install --no-cache-dir fastapi uvicorn pydantic requests numpy rdkit deepchem
 
 COPY molgraphiq-api/ ./molgraphiq-api/
 COPY molgraphiq_models/ ./molgraphiq_models/
