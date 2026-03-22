@@ -6,6 +6,9 @@ RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
     git \
+    libxrender1 \
+    libxext6 \
+    libx11-6 \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip install --no-cache-dir torch==2.1.0 --index-url https://download.pytorch.org/whl/cpu
