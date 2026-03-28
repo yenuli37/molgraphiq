@@ -245,7 +245,7 @@ export default function Predict() {
                                     className="absolute top-2 right-2 text-xs text-muted hover:text-white transition-colors"
                                     style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}
                                 >
-                                    ✕
+                                    ×
                                 </button>
                             )}
                         </div>
@@ -320,7 +320,7 @@ export default function Predict() {
                             disabled={loading}
                             style={{ opacity: loading ? 0.7 : 1 }}
                         >
-                            {loading ? 'Running GNN...' : '⚡ Predict Property'}
+                            {loading ? 'Running inference...' : 'Predict Property'}
                         </button>
                     </GlassCard>
                 </motion.div>
@@ -355,7 +355,7 @@ export default function Predict() {
                                 border: '1px solid rgba(239,68,68,0.25)',
                             }}
                         >
-                            <span className="text-red-400 text-lg">⚠</span>
+                            <span className="text-red-400 text-sm font-bold">!</span>
                             <div>
                                 <p className="text-red-400 text-sm font-semibold">Prediction Failed</p>
                                 <p className="text-red-300 text-xs mt-1 opacity-80">{error}</p>
@@ -411,7 +411,7 @@ export default function Predict() {
                                                     minHeight: 180,
                                                 }}
                                             >
-                                                <div className="text-4xl mb-2">🔬</div>
+                                                <div className="text-xs font-semibold text-muted mb-1">No structure available</div>
                                                 <p className="text-xs text-muted">2D structure pending backend</p>
                                             </div>
                                         )}
@@ -429,22 +429,51 @@ export default function Predict() {
                                                 border: '1px solid rgba(236, 143, 141, 0.25)',
                                             }}
                                         >
-                                            <p className="text-4xl font-black mb-1" style={{ color: '#F4F0E4' }}>
-                                                {results.prediction?.prediction !== undefined
-                                                    ? formatPrediction(
-                                                        results.prediction.prediction,
-                                                        results.prediction.task_type,
-                                                        selectedDataset?.unit,
-                                                    )
-                                                    : '—'}
-                                            </p>
+                                            {results.prediction?.task_type === 'regression' ? (
+                                                <>
+                                                    <p className="text-4xl font-black mb-1" style={{ color: '#F4F0E4' }}>
+                                                        {results.prediction?.prediction !== undefined
+                                                            ? formatPrediction(
+                                                                results.prediction.prediction,
+                                                                results.prediction.task_type,
+                                                                selectedDataset?.unit,
+                                                            )
+                                                            : '—'}
+                                                    </p>
+                                                    {results.prediction?.uncertainty !== undefined && (
+                                                        <p className="text-xs font-mono mb-1" style={{ color: '#44A194' }}>
+                                                            &plusmn;{results.prediction.uncertainty.toFixed(4)} uncertainty
+                                                            <span className="ml-1 text-muted">(MC Dropout, n=20)</span>
+                                                        </p>
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <p className="text-4xl font-black mb-1" style={{ color: '#F4F0E4' }}>
+                                                    {results.prediction?.prediction !== undefined
+                                                        ? formatPrediction(
+                                                            results.prediction.prediction,
+                                                            results.prediction.task_type,
+                                                            selectedDataset?.unit,
+                                                        )
+                                                        : '—'}
+                                                </p>
+                                            )}
                                             <p className="text-xs text-muted">{selectedDataset?.description}</p>
                                         </div>
 
                                         {results.prediction?.task_type === 'classification' &&
                                             results.prediction?.confidence !== undefined && (
-                                                <div className="mb-4">
+                                                <div className="mb-3">
                                                     <ConfidenceBadge confidence={results.prediction.confidence} />
+                                                    {results.prediction?.uncertainty !== undefined && (
+                                                        <p
+                                                            className="text-xs font-mono mt-2"
+                                                            style={{ color: '#44A194' }}
+                                                        >
+                                                            &plusmn;{results.prediction.uncertainty.toFixed(4)} uncertainty
+                                                            <span className="ml-1 text-muted">(MC Dropout, n=20)</span>
+                                                        </p>
+                                                    )}
                                                 </div>
                                             )}
 

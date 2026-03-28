@@ -272,7 +272,63 @@ class ModelRegistry:
                 "label": label,
             }
 
+    def predict_with_uncertainty(self, smiles: str, dataset: str, n_passes: int = 20) -> dict:
+        """Monte Carlo Dropout — run n stochastic forward passes to estimate uncertainty."""
+        if dataset not in self.models:
+            raise ValueError(f"Model not loaded: {dataset}")
+
+        model = self.models[dataset]
+        cfg = DATASET_CONFIGS[dataset]
+        task_type = cfg["task_type"]
+
+        data = smiles_to_pyg(smiles, self._featurizer).to(self.device)
+
+        # Set only Dropout layers to train mode; everything else stays eval
+        model.train()
+        for module in model.modules():
+            if not isinstance(module, torch.nn.Dropout):
+                if hasattr(module, "training"):
+                    module.eval()
+
+        predictions = []
+        with torch.no_grad():
+            for _ in range(n_passes):
+                logits, _, _ = model(data.x, data.edge_index, data.edge_attr, data.batch)
+                if task_type == "regression":
+                    pred = float(logits[0, 0].item())
+                else:
+                    pred = float(torch.sigmoid(logits[0, 0]).item())
+                predictions.append(pred)
+
+        model.eval()
+
+        preds = np.array(predictions)
+        mean_pred = float(np.mean(preds))
+        uncertainty = float(np.std(preds))
+
+        if task_type == "regression":
+            return {
+                "prediction": mean_pred,
+                "uncertainty": round(uncertainty, 4),
+                "task_type": "regression",
+                "confidence": None,
+                "unit": cfg["unit"],
+                "label": None,
+            }
+        else:
+            confidence = float(max(mean_pred, 1.0 - mean_pred))
+            label = "Active" if mean_pred >= 0.5 else "Inactive"
+            return {
+                "prediction": mean_pred,
+                "uncertainty": round(uncertainty, 4),
+                "task_type": "classification",
+                "confidence": confidence,
+                "unit": "probability",
+                "label": label,
+            }
+
     def get_model_and_data(self, smiles: str, dataset: str):
+
         """
         Return (model, data) ready for GNNExplainer.
         Used by the /explain endpoint.

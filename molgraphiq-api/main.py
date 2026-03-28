@@ -73,6 +73,7 @@ class PredictRequest(BaseModel):
 
 class PredictResponse(BaseModel):
     prediction: float
+    uncertainty: float
     task_type: str
     confidence: float | None
     unit: str
@@ -86,6 +87,7 @@ class ExplainRequest(BaseModel):
 
 class ExplainResponse(BaseModel):
     prediction: float
+    uncertainty: float
     svg: str
     atom_importance: list[float]
     atom_symbols: list[str]
@@ -209,7 +211,7 @@ def predict(req: PredictRequest):
     _validate_inputs(smiles, dataset)
 
     try:
-        result = get_registry().predict(smiles, dataset)
+        result = get_registry().predict_with_uncertainty(smiles, dataset)
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))
     except Exception as e:
@@ -242,14 +244,15 @@ def explain_endpoint(req: ExplainRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Explanation error: {e}")
 
-    # Also compute the prediction value
+    # Also compute prediction + uncertainty via MC Dropout
     try:
-        pred_result = get_registry().predict(smiles, dataset)
+        pred_result = get_registry().predict_with_uncertainty(smiles, dataset)
     except Exception:
-        pred_result = {"prediction": 0.0}
+        pred_result = {"prediction": 0.0, "uncertainty": 0.0}
 
     return ExplainResponse(
         prediction=pred_result["prediction"],
+        uncertainty=pred_result.get("uncertainty", 0.0),
         svg=result["svg"],
         atom_importance=result["atom_importance"],
         atom_symbols=result["atom_symbols"],

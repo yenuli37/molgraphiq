@@ -105,9 +105,9 @@ export default function About() {
                                     {i < architectureSteps.length - 1 && (
                                         <div
                                             className="flex items-center px-2 flex-shrink-0"
-                                            style={{ color: 'rgba(68, 161, 148,0.3)', fontSize: '18px' }}
+                                            style={{ color: 'rgba(68, 161, 148,0.4)', fontSize: '14px' }}
                                         >
-                                            →
+                                            &rsaquo;
                                         </div>
                                     )}
                                 </div>
@@ -131,19 +131,19 @@ export default function About() {
                                     title: 'Shared Encoder',
                                     desc: 'GIN backbone pre-trained on QMugs quantum chemical dataset — learns transferable molecular representations.',
                                     color: '#44A194',
-                                    icon: '🧠',
+                                    icon: 'ENC',
                                 },
                                 {
                                     title: 'Knowledge Transfer',
                                     desc: 'HOMO/LUMO energy levels and DFT properties distilled as auxiliary supervision during pre-training.',
                                     color: '#44A194',
-                                    icon: '⚡',
+                                    icon: 'KT',
                                 },
                                 {
                                     title: 'Task Heads',
                                     desc: 'Regression head (MSE loss) for continuous properties; binary/multi-label classification head (BCE) for activity.',
                                     color: '#22c55e',
-                                    icon: '🎯',
+                                    icon: 'MLP',
                                 },
                             ].map(({ title, desc, color, icon }) => (
                                 <div
@@ -151,7 +151,12 @@ export default function About() {
                                     className="rounded-xl p-4"
                                     style={{ background: `${color}08`, border: `1px solid ${color}20` }}
                                 >
-                                    <div className="text-xl mb-2">{icon}</div>
+                                    <div
+                                        className="text-xs font-black mb-2 px-2 py-0.5 rounded inline-block"
+                                        style={{ background: `${color}15`, color }}
+                                    >
+                                        {icon}
+                                    </div>
                                     <p className="text-sm font-semibold mb-1" style={{ color }}>
                                         {title}
                                     </p>

@@ -13,22 +13,22 @@ const fadeUp = {
 
 const features = [
     {
-        icon: '🧬',
+        icon: 'GNN',
         title: 'Graph Neural Networks',
         desc: 'Processes molecular topology directly as graphs — atoms as nodes, bonds as edges.',
     },
     {
-        icon: '🔬',
+        icon: 'KA',
         title: 'Knowledge Augmentation',
         desc: 'Pre-trained on large molecular datasets to transfer chemical domain knowledge.',
     },
     {
-        icon: '📊',
+        icon: 'MT',
         title: 'Multi-Task Prediction',
         desc: 'Solubility, lipophilicity, toxicity, bioactivity — all from a single unified model.',
     },
     {
-        icon: '🎯',
+        icon: 'XAI',
         title: 'GNN Explainability',
         desc: 'Highlights which molecular substructures drive each prediction via GNNExplainer.',
     },
@@ -128,10 +128,10 @@ export default function Home() {
                     className="flex flex-col sm:flex-row gap-4"
                 >
                     <Link to="/predict" className="btn-primary no-underline text-sm inline-block">
-                        ⚡ Try Prediction
+                        Run Prediction
                     </Link>
                     <Link to="/about" className="btn-outline no-underline text-sm inline-block">
-                        Learn More →
+                        Learn More
                     </Link>
                 </motion.div>
 
@@ -186,7 +186,17 @@ export default function Home() {
                             animate="visible"
                             className="glass-card-hover p-6 text-left"
                         >
-                            <div className="text-2xl mb-3">{icon}</div>
+                            <div
+                                className="text-xs font-black mb-3 px-2 py-1 rounded"
+                                style={{
+                                    display: 'inline-block',
+                                    background: 'rgba(68,161,148,0.12)',
+                                    color: '#44A194',
+                                    letterSpacing: '0.05em',
+                                }}
+                            >
+                                {icon}
+                            </div>
                             <h3 className="font-semibold text-sm mb-2" style={{ color: '#F4F0E4' }}>
                                 {title}
                             </h3>
