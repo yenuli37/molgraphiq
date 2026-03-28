@@ -283,23 +283,22 @@ class ModelRegistry:
 
         data = smiles_to_pyg(smiles, self._featurizer).to(self.device)
 
-        # Set only Dropout layers to train mode; everything else stays eval
+        # Set model to TRAIN mode — this enables dropout
         model.train()
-        for module in model.modules():
-            if not isinstance(module, torch.nn.Dropout):
-                if hasattr(module, "training"):
-                    module.eval()
 
         predictions = []
         with torch.no_grad():
             for _ in range(n_passes):
-                logits, _, _ = model(data.x, data.edge_index, data.edge_attr, data.batch)
+                logits, _, _ = model(
+                    data.x, data.edge_index,
+                    data.edge_attr, data.batch)
                 if task_type == "regression":
                     pred = float(logits[0, 0].item())
                 else:
                     pred = float(torch.sigmoid(logits[0, 0]).item())
                 predictions.append(pred)
 
+        # Set back to eval mode
         model.eval()
 
         preds = np.array(predictions)
