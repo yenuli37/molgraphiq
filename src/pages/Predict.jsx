@@ -205,6 +205,38 @@ export default function Predict() {
         e.target.value = '';
     };
 
+    const [cidInput, setCidInput] = useState('');
+    const [cidLoading, setCidLoading] = useState(false);
+    const [cidError, setCidError] = useState(null);
+
+    const fetchFromPubchem = async () => {
+        const cid = cidInput.trim();
+        if (!cid || isNaN(cid)) {
+            setCidError('Please enter a valid numeric CID.');
+            return;
+        }
+        setCidError(null);
+        setCidLoading(true);
+        try {
+            const res = await fetch(
+                `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cid}/property/IsomericSMILES/JSON`
+            );
+            if (!res.ok) {
+                if (res.status === 404) throw new Error(`CID ${cid} not found in PubChem.`);
+                throw new Error(`PubChem returned status ${res.status}.`);
+            }
+            const json = await res.json();
+            const fetched = json?.PropertyTable?.Properties?.[0]?.IsomericSMILES;
+            if (!fetched) throw new Error('Could not extract SMILES from PubChem response.');
+            setSmiles(fetched);
+            setCidInput('');
+        } catch (err) {
+            setCidError(err.message || 'Failed to fetch from PubChem.');
+        } finally {
+            setCidLoading(false);
+        }
+    };
+
     const downloadCSV = () => {
         const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
         const filename = `molgraphiq_${dataset}_${timestamp}.csv`;
@@ -350,6 +382,51 @@ export default function Predict() {
                             {fileError && (
                                 <p className="text-xs mt-2 px-1" style={{ color: '#EC8F8D' }}>
                                     {fileError}
+                                </p>
+                            )}
+                        </div>
+
+                        {/* PubChem CID lookup */}
+                        <div className="mb-5">
+                            <p className="text-xs font-semibold mb-1" style={{ color: 'rgba(244,240,228,0.55)' }}>
+                                Or enter a PubChem CID
+                                <span className="ml-1 font-normal" style={{ color: 'rgba(255,255,255,0.28)' }}>(e.g. 2244 for Aspirin)</span>
+                            </p>
+                            <p className="text-xs mb-2" style={{ color: 'rgba(255,255,255,0.22)' }}>
+                                PubChem CID is the numeric identifier from pubchem.ncbi.nlm.nih.gov
+                            </p>
+                            <div className="flex gap-2">
+                                <input
+                                    type="number"
+                                    min="1"
+                                    className="input-glass text-sm flex-1"
+                                    placeholder="e.g. 2244"
+                                    value={cidInput}
+                                    onChange={(e) => { setCidInput(e.target.value); setCidError(null); }}
+                                    onKeyDown={(e) => e.key === 'Enter' && fetchFromPubchem()}
+                                    disabled={cidLoading}
+                                    style={{ padding: '0.45rem 0.75rem' }}
+                                />
+                                <button
+                                    onClick={fetchFromPubchem}
+                                    disabled={cidLoading || !cidInput.trim()}
+                                    className="text-xs px-4 py-2 rounded-lg font-semibold transition-all duration-200"
+                                    style={{
+                                        background: cidLoading || !cidInput.trim()
+                                            ? 'rgba(68,161,148,0.08)'
+                                            : 'rgba(68,161,148,0.18)',
+                                        border: '1px solid rgba(68,161,148,0.30)',
+                                        color: cidLoading || !cidInput.trim() ? 'rgba(68,161,148,0.45)' : '#44A194',
+                                        cursor: cidLoading || !cidInput.trim() ? 'not-allowed' : 'pointer',
+                                        whiteSpace: 'nowrap',
+                                    }}
+                                >
+                                    {cidLoading ? 'Fetching...' : 'Fetch'}
+                                </button>
+                            </div>
+                            {cidError && (
+                                <p className="text-xs mt-2 px-1" style={{ color: '#EC8F8D' }}>
+                                    {cidError}
                                 </p>
                             )}
                         </div>
