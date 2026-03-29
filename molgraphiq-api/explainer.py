@@ -63,9 +63,13 @@ def generate_svg(smiles: str, atom_importance: list, width: int = 500, height: i
         atom_colors[i] = (r, 1.0 - r, 1.0 - r)
         atom_radii[i] = 0.3 + 0.2 * r
 
+    # Set atom map numbers so labels render as Element:index (e.g. C:1, O:3)
+    for atom in mol.GetAtoms():
+        atom.SetAtomMapNum(atom.GetIdx() + 1)
+
     drawer = rdMolDraw2D.MolDraw2DSVG(width, height)
     drawer.drawOptions().addStereoAnnotation = False
-    drawer.drawOptions().addAtomIndices = True
+    drawer.drawOptions().addAtomIndices = False
     rdMolDraw2D.PrepareAndDrawMolecule(
         drawer, mol,
         highlightAtoms=highlight_atoms,
@@ -73,6 +77,10 @@ def generate_svg(smiles: str, atom_importance: list, width: int = 500, height: i
         highlightAtomRadii=atom_radii)
     drawer.FinishDrawing()
     svg = drawer.GetDrawingText()
+
+    # Clear atom map numbers to avoid polluting future calls
+    for atom in mol.GetAtoms():
+        atom.SetAtomMapNum(0)
 
     # Replace whatever background colour RDKit emits with warm cream
     svg = svg.replace(

@@ -12,7 +12,7 @@ const DATASETS = [
         description: 'Water solubility (log mol/L)',
         taskType: 'regression',
         unit: 'log mol/L',
-        hint: 'Predicts aqueous solubility — critical for drug absorption.',
+        hint: 'Predicts aqueous solubility, which is critical for drug absorption.',
     },
     {
         value: 'lipophilicity',
@@ -20,7 +20,7 @@ const DATASETS = [
         description: 'Octanol-water distribution (log D)',
         taskType: 'regression',
         unit: 'log D',
-        hint: 'Measures lipophilicity (octanol/water partition) — impacts membrane permeability.',
+        hint: 'Measures lipophilicity (octanol/water partition), which impacts membrane permeability.',
     },
     {
         value: 'bace',
@@ -36,7 +36,7 @@ const DATASETS = [
         description: 'BBB permeability (binary)',
         taskType: 'classification',
         unit: 'probability',
-        hint: 'Predicts blood-brain barrier permeability — key for CNS drug design.',
+        hint: 'Predicts blood-brain barrier permeability, key for CNS drug design.',
     },
     {
         value: 'clintox',
@@ -52,7 +52,7 @@ const DATASETS = [
         description: 'HIV replication inhibition (binary)',
         taskType: 'classification',
         unit: 'probability',
-        hint: 'Predicts ability to inhibit HIV replication — antiviral drug screening.',
+        hint: 'Predicts ability to inhibit HIV replication for antiviral drug screening.',
     },
     {
         value: 'tox21',
@@ -95,7 +95,7 @@ function AtomImportanceChart({ importances, atom_symbols }) {
                     return (
                         <div key={idx} className="flex items-center gap-3">
                             <span className="text-xs text-muted w-14 flex-shrink-0">
-                                {atom_symbols?.[idx] ? `${atom_symbols[idx]}${idx + 1}` : `Atom ${idx + 1}`}
+                                {atom_symbols?.[idx] ? `${atom_symbols[idx]}:${idx + 1}` : `Atom ${idx + 1}`}
                             </span>
                             <div
                                 className="flex-1 rounded-full overflow-hidden"
@@ -420,7 +420,7 @@ export default function Predict() {
                                     {/* Right: Prediction value */}
                                     <div>
                                         <p className="text-xs font-semibold mb-3" style={{ color: '#F4F0E4' }}>
-                                            Result — {selectedDataset?.label}
+                                            Result: {selectedDataset?.label}
                                         </p>
                                         <div
                                             className="rounded-xl p-4 mb-4"

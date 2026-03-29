@@ -64,7 +64,7 @@ export default function About() {
                     </h1>
                     <p className="text-muted text-sm max-w-xl mx-auto leading-relaxed">
                         A Knowledge-Augmented Graph Neural Network framework for molecular property
-                        prediction — bridging pre-training, graph learning, and explainability.
+                        prediction, bridging pre-training, graph learning, and explainability.
                     </p>
                 </motion.div>
 
@@ -129,7 +129,7 @@ export default function About() {
                             {[
                                 {
                                     title: 'Shared Encoder',
-                                    desc: 'GIN backbone pre-trained on QMugs quantum chemical dataset — learns transferable molecular representations.',
+                                    desc: 'GIN backbone pre-trained on QMugs quantum chemical dataset, learning transferable molecular representations.',
                                     color: '#44A194',
                                     icon: 'ENC',
                                 },

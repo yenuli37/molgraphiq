@@ -15,7 +15,7 @@ const features = [
     {
         icon: 'GNN',
         title: 'Graph Neural Networks',
-        desc: 'Processes molecular topology directly as graphs — atoms as nodes, bonds as edges.',
+        desc: 'Processes molecular topology directly as graphs, with atoms as nodes and bonds as edges.',
     },
     {
         icon: 'KA',
@@ -25,7 +25,7 @@ const features = [
     {
         icon: 'MT',
         title: 'Multi-Task Prediction',
-        desc: 'Solubility, lipophilicity, toxicity, bioactivity — all from a single unified model.',
+        desc: 'Solubility, lipophilicity, toxicity, bioactivity: all from a single unified model.',
     },
     {
         icon: 'XAI',
@@ -115,7 +115,7 @@ export default function Home() {
                     style={{ color: 'rgba(244, 240, 228, 0.50)', lineHeight: 1.8 }}
                 >
                     Enter a SMILES string and predict drug-like molecular properties with state-of-the-art
-                    GNN models — trained on 7 benchmark datasets spanning solubility, toxicity, bioactivity
+                    GNN models trained on 7 benchmark datasets spanning solubility, toxicity, bioactivity
                     and beyond.
                 </motion.p>
 
