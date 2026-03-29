@@ -298,7 +298,10 @@ def get_pubchem_smiles(cid: str):
             props = data["PropertyTable"]["Properties"]
             smiles = None
             for prop in props:
-                if "IsomericSMILES" in prop:
+                if "SMILES" in prop:
+                    smiles = prop["SMILES"]
+                    break
+                elif "IsomericSMILES" in prop:
                     smiles = prop["IsomericSMILES"]
                     break
                 elif "CanonicalSMILES" in prop:
