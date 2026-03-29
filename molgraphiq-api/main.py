@@ -290,14 +290,32 @@ def get_pubchem_smiles(cid: str):
         url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/{cid}/property/IsomericSMILES/JSON"
         response = req.get(url, timeout=10)
         if not response.ok:
-            raise HTTPException(status_code=404, detail=f"PubChem CID {cid} not found")
+            raise HTTPException(status_code=404,
+                detail=f"PubChem CID {cid} not found")
         data = response.json()
-        smiles = data["PropertyTable"]["Properties"][0]["IsomericSMILES"]
-        return {"smiles": smiles, "cid": cid}
+        # Safe extraction with fallback to CanonicalSMILES
+        try:
+            props = data["PropertyTable"]["Properties"]
+            smiles = None
+            for prop in props:
+                if "IsomericSMILES" in prop:
+                    smiles = prop["IsomericSMILES"]
+                    break
+                elif "CanonicalSMILES" in prop:
+                    smiles = prop["CanonicalSMILES"]
+                    break
+            if not smiles:
+                raise HTTPException(status_code=422,
+                    detail="No SMILES found in PubChem response")
+            return {"smiles": smiles, "cid": cid}
+        except (KeyError, IndexError) as e:
+            raise HTTPException(status_code=422,
+                detail=f"Unexpected PubChem response format: {str(e)}")
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=422, detail=f"Could not fetch SMILES: {str(e)}")
+        raise HTTPException(status_code=422,
+            detail=f"Could not fetch SMILES: {str(e)}")
 
 
 # ──────────────────────────────────────────────────────────────
