@@ -65,6 +65,7 @@ def generate_svg(smiles: str, atom_importance: list, width: int = 500, height: i
 
     drawer = rdMolDraw2D.MolDraw2DSVG(width, height)
     drawer.drawOptions().addStereoAnnotation = False
+    drawer.drawOptions().addAtomIndices = True
     rdMolDraw2D.PrepareAndDrawMolecule(
         drawer, mol,
         highlightAtoms=highlight_atoms,
