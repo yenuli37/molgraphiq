@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://molgraphiq-51609780733.us-central1.run.app';
+export const BASE_URL = 'https://molgraphiq-51609780733.us-central1.run.app';
 
 const api = axios.create({
     baseURL: BASE_URL,

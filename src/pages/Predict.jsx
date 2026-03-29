@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import GlassCard from '../components/GlassCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import MolecularBackground from '../components/MolecularBackground';
-import { predictMolecule, explainMolecule, parseFile } from '../api/api';
+import { predictMolecule, explainMolecule, parseFile, BASE_URL } from '../api/api';
 
 const DATASETS = [
     {
@@ -214,14 +214,11 @@ export default function Predict() {
         setPubchemLoading(true);
         setPubchemError(null);
         try {
-            const response = await fetch(
-                `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${pubchemCID.trim()}/property/IsomericSMILES/JSON`
-            );
+            const response = await fetch(`${BASE_URL}/pubchem/${pubchemCID.trim()}`);
             if (!response.ok) throw new Error('CID not found');
             const data = await response.json();
-            const smiles = data?.PropertyTable?.Properties?.[0]?.IsomericSMILES;
-            if (!smiles) throw new Error('Could not extract SMILES');
-            setSmiles(smiles);
+            if (!data.smiles) throw new Error('Could not extract SMILES');
+            setSmiles(data.smiles);
             setResults(null);
             setError(null);
         } catch (err) {

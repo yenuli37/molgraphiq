@@ -281,6 +281,25 @@ def parse_file(request: dict):
         raise HTTPException(status_code=422, detail=str(e))
 
 
+
+@app.get("/pubchem/{cid}")
+def get_pubchem_smiles(cid: str):
+    """Proxy PubChem REST API to avoid browser CORS restrictions."""
+    import requests as req
+    try:
+        url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/{cid}/property/IsomericSMILES/JSON"
+        response = req.get(url, timeout=10)
+        if not response.ok:
+            raise HTTPException(status_code=404, detail=f"PubChem CID {cid} not found")
+        data = response.json()
+        smiles = data["PropertyTable"]["Properties"][0]["IsomericSMILES"]
+        return {"smiles": smiles, "cid": cid}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=422, detail=f"Could not fetch SMILES: {str(e)}")
+
+
 # ──────────────────────────────────────────────────────────────
 # Serve React frontend (only when dist/ exists after npm run build)
 # ──────────────────────────────────────────────────────────────
