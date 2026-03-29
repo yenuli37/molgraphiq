@@ -17,7 +17,7 @@ const DATASETS = [
     {
         value: 'lipophilicity',
         label: 'Lipophilicity',
-        description: 'Octanol-water distribution (log D)',
+        description: 'Octanol-water distribution coefficient (logD at pH 7.4)',
         taskType: 'regression',
         unit: 'log D',
         hint: 'Measures lipophilicity (octanol/water partition), which impacts membrane permeability.',
@@ -28,6 +28,7 @@ const DATASETS = [
         description: 'Beta-secretase 1 inhibitor (binary)',
         taskType: 'classification',
         unit: 'probability',
+        direction: 'Higher probability = more likely BACE-1 inhibitor',
         hint: 'Predicts if the molecule inhibits BACE-1, a target in Alzheimer\'s research.',
     },
     {
@@ -36,6 +37,7 @@ const DATASETS = [
         description: 'BBB permeability (binary)',
         taskType: 'classification',
         unit: 'probability',
+        direction: 'Higher probability = more likely BBB permeable',
         hint: 'Predicts blood-brain barrier permeability, key for CNS drug design.',
     },
     {
@@ -44,6 +46,7 @@ const DATASETS = [
         description: 'FDA clinical trial failure (binary)',
         taskType: 'classification',
         unit: 'probability',
+        direction: 'Higher probability = more likely to fail clinical trials',
         hint: 'Predicts if a molecule has failed clinical trials for toxicity reasons.',
     },
     {
@@ -52,6 +55,7 @@ const DATASETS = [
         description: 'HIV replication inhibition (binary)',
         taskType: 'classification',
         unit: 'probability',
+        direction: 'Higher probability = more likely to inhibit HIV',
         hint: 'Predicts ability to inhibit HIV replication for antiviral drug screening.',
     },
     {
@@ -60,6 +64,7 @@ const DATASETS = [
         description: '12 toxicity assays (multi-label)',
         taskType: 'classification',
         unit: 'probability',
+        direction: 'Higher probability = more likely toxic',
         hint: 'Screens against 12 toxicity pathways from the Tox21 challenge.',
     },
 ];
@@ -275,9 +280,9 @@ export default function Predict() {
                             ))}
                         </div>
 
-                        {/* Dataset Selector */}
+                        {/* Property Selector */}
                         <label className="block text-xs font-semibold mb-2" style={{ color: '#F4F0E4' }}>
-                            Dataset
+                            Property
                         </label>
                         <div className="relative mb-5">
                             <select
@@ -448,15 +453,22 @@ export default function Predict() {
                                                     )}
                                                 </>
                                             ) : (
-                                                <p className="text-4xl font-black mb-1" style={{ color: '#F4F0E4' }}>
-                                                    {results.prediction?.prediction !== undefined
-                                                        ? formatPrediction(
-                                                            results.prediction.prediction,
-                                                            results.prediction.task_type,
-                                                            selectedDataset?.unit,
-                                                        )
-                                                        : '—'}
-                                                </p>
+                                                <>
+                                                    <p className="text-4xl font-black mb-1" style={{ color: '#F4F0E4' }}>
+                                                        {results.prediction?.prediction !== undefined
+                                                            ? formatPrediction(
+                                                                results.prediction.prediction,
+                                                                results.prediction.task_type,
+                                                                selectedDataset?.unit,
+                                                            )
+                                                            : '—'}
+                                                    </p>
+                                                    {selectedDataset?.direction && (
+                                                        <p className="text-xs mt-1" style={{ color: 'rgba(68,161,148,0.85)' }}>
+                                                            ↑ {selectedDataset.direction}
+                                                        </p>
+                                                    )}
+                                                </>
                                             )}
                                             <p className="text-xs text-muted">{selectedDataset?.description}</p>
                                         </div>
