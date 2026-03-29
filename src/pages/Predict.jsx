@@ -205,35 +205,29 @@ export default function Predict() {
         e.target.value = '';
     };
 
-    const [cidInput, setCidInput] = useState('');
-    const [cidLoading, setCidLoading] = useState(false);
-    const [cidError, setCidError] = useState(null);
+    const [pubchemCID, setPubchemCID] = useState('');
+    const [pubchemLoading, setPubchemLoading] = useState(false);
+    const [pubchemError, setPubchemError] = useState(null);
 
-    const fetchFromPubchem = async () => {
-        const cid = cidInput.trim();
-        if (!cid || isNaN(cid)) {
-            setCidError('Please enter a valid numeric CID.');
-            return;
-        }
-        setCidError(null);
-        setCidLoading(true);
+    const fetchPubChem = async () => {
+        if (!pubchemCID.trim()) return;
+        setPubchemLoading(true);
+        setPubchemError(null);
         try {
-            const res = await fetch(
-                `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cid}/property/IsomericSMILES/JSON`
+            const response = await fetch(
+                `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${pubchemCID.trim()}/property/IsomericSMILES/JSON`
             );
-            if (!res.ok) {
-                if (res.status === 404) throw new Error(`CID ${cid} not found in PubChem.`);
-                throw new Error(`PubChem returned status ${res.status}.`);
-            }
-            const json = await res.json();
-            const fetched = json?.PropertyTable?.Properties?.[0]?.IsomericSMILES;
-            if (!fetched) throw new Error('Could not extract SMILES from PubChem response.');
-            setSmiles(fetched);
-            setCidInput('');
+            if (!response.ok) throw new Error('CID not found');
+            const data = await response.json();
+            const smiles = data?.PropertyTable?.Properties?.[0]?.IsomericSMILES;
+            if (!smiles) throw new Error('Could not extract SMILES');
+            setSmiles(smiles);
+            setResults(null);
+            setError(null);
         } catch (err) {
-            setCidError(err.message || 'Failed to fetch from PubChem.');
+            setPubchemError(err.message || 'Failed to fetch from PubChem');
         } finally {
-            setCidLoading(false);
+            setPubchemLoading(false);
         }
     };
 
@@ -401,32 +395,32 @@ export default function Predict() {
                                     min="1"
                                     className="input-glass text-sm flex-1"
                                     placeholder="e.g. 2244"
-                                    value={cidInput}
-                                    onChange={(e) => { setCidInput(e.target.value); setCidError(null); }}
-                                    onKeyDown={(e) => e.key === 'Enter' && fetchFromPubchem()}
-                                    disabled={cidLoading}
+                                    value={pubchemCID}
+                                    onChange={(e) => { setPubchemCID(e.target.value); setPubchemError(null); }}
+                                    onKeyDown={(e) => e.key === 'Enter' && fetchPubChem()}
+                                    disabled={pubchemLoading}
                                     style={{ padding: '0.45rem 0.75rem' }}
                                 />
                                 <button
-                                    onClick={fetchFromPubchem}
-                                    disabled={cidLoading || !cidInput.trim()}
+                                    onClick={fetchPubChem}
+                                    disabled={pubchemLoading || !pubchemCID.trim()}
                                     className="text-xs px-4 py-2 rounded-lg font-semibold transition-all duration-200"
                                     style={{
-                                        background: cidLoading || !cidInput.trim()
+                                        background: pubchemLoading || !pubchemCID.trim()
                                             ? 'rgba(68,161,148,0.08)'
                                             : 'rgba(68,161,148,0.18)',
                                         border: '1px solid rgba(68,161,148,0.30)',
-                                        color: cidLoading || !cidInput.trim() ? 'rgba(68,161,148,0.45)' : '#44A194',
-                                        cursor: cidLoading || !cidInput.trim() ? 'not-allowed' : 'pointer',
+                                        color: pubchemLoading || !pubchemCID.trim() ? 'rgba(68,161,148,0.45)' : '#44A194',
+                                        cursor: pubchemLoading || !pubchemCID.trim() ? 'not-allowed' : 'pointer',
                                         whiteSpace: 'nowrap',
                                     }}
                                 >
-                                    {cidLoading ? 'Fetching...' : 'Fetch'}
+                                    {pubchemLoading ? 'Fetching...' : 'Fetch'}
                                 </button>
                             </div>
-                            {cidError && (
+                            {pubchemError && (
                                 <p className="text-xs mt-2 px-1" style={{ color: '#EC8F8D' }}>
-                                    {cidError}
+                                    {pubchemError}
                                 </p>
                             )}
                         </div>
