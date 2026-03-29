@@ -180,6 +180,38 @@ export default function Predict() {
         }
     };
 
+    const downloadCSV = () => {
+        const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+        const filename = `molgraphiq_${dataset}_${timestamp}.csv`;
+
+        const atomRows = results.explanation?.atom_importance?.map((imp, idx) => {
+            const symbol = results.explanation?.atom_symbols?.[idx] || `Atom${idx + 1}`;
+            return `${symbol}:${idx + 1},${(imp * 100).toFixed(1)}%`;
+        }).join('\n') || '';
+
+        const content = [
+            'MolGraphIQ Prediction Results',
+            `SMILES,${smiles}`,
+            `Property,${selectedDataset?.label}`,
+            `Prediction,${results.prediction?.prediction}`,
+            `Unit,${selectedDataset?.unit}`,
+            `Uncertainty,±${results.prediction?.uncertainty}`,
+            results.prediction?.confidence ? `Confidence,${(results.prediction.confidence * 100).toFixed(1)}%` : '',
+            results.prediction?.label ? `Label,${results.prediction.label}` : '',
+            '',
+            'Atom,Importance',
+            atomRows,
+        ].filter(Boolean).join('\n');
+
+        const blob = new Blob([content], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+
     const formatPrediction = (val, taskType, unit) => {
         if (taskType === 'classification') {
             return `${(val * 100).toFixed(1)}% (${unit})`;
@@ -512,6 +544,23 @@ export default function Predict() {
                                         />
                                     </>
                                 )}
+
+                                {/* Download Results */}
+                                <div className="divider-cyan mt-5 mb-4" />
+                                <button
+                                    onClick={downloadCSV}
+                                    className="text-sm px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2"
+                                    style={{
+                                        background: 'rgba(68,161,148,0.10)',
+                                        border: '1px solid rgba(68,161,148,0.30)',
+                                        color: '#44A194',
+                                        cursor: 'pointer',
+                                    }}
+                                    onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(68,161,148,0.20)'; }}
+                                    onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(68,161,148,0.10)'; }}
+                                >
+                                    ⬇ Download Results (.csv)
+                                </button>
                             </GlassCard>
                         </motion.div>
                     )}
