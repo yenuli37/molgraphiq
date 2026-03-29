@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import GlassCard from '../components/GlassCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import MolecularBackground from '../components/MolecularBackground';
-import { predictMolecule, explainMolecule } from '../api/api';
+import { predictMolecule, explainMolecule, parseFile } from '../api/api';
 
 const DATASETS = [
     {
@@ -180,6 +180,31 @@ export default function Predict() {
         }
     };
 
+    const [fileUploadState, setFileUploadState] = useState(null); // null | 'loading' | filename string
+    const [fileError, setFileError] = useState(null);
+
+    const handleFileUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setFileError(null);
+        setFileUploadState('loading');
+        try {
+            const content = await file.text();
+            const { smiles: parsed } = await parseFile(file.name, content);
+            setSmiles(parsed);
+            setFileUploadState(file.name);
+        } catch (err) {
+            const msg =
+                err.response?.data?.detail ||
+                err.message ||
+                'Could not parse file.';
+            setFileError(msg);
+            setFileUploadState(null);
+        }
+        // Reset input so same file can be re-uploaded
+        e.target.value = '';
+    };
+
     const downloadCSV = () => {
         const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
         const filename = `molgraphiq_${dataset}_${timestamp}.csv`;
@@ -284,6 +309,48 @@ export default function Predict() {
                                 >
                                     ×
                                 </button>
+                            )}
+                        </div>
+
+                        {/* File upload */}
+                        <div className="mb-5">
+                            <p className="text-xs font-semibold mb-2" style={{ color: 'rgba(244,240,228,0.55)' }}>
+                                Or upload a molecule file
+                                <span className="ml-1 font-normal" style={{ color: 'rgba(255,255,255,0.28)' }}>(.sdf, .mol)</span>
+                            </p>
+                            <label
+                                className="flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-all duration-200"
+                                style={{
+                                    background: 'rgba(68,161,148,0.05)',
+                                    border: '1px dashed rgba(68,161,148,0.30)',
+                                    color: '#44A194',
+                                }}
+                                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(68,161,148,0.10)'; }}
+                                onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(68,161,148,0.05)'; }}
+                            >
+                                <span className="text-xs font-black px-2 py-0.5 rounded-full"
+                                    style={{ background: 'rgba(68,161,148,0.12)', border: '1px solid rgba(68,161,148,0.25)', letterSpacing: '0.05em' }}>
+                                    MOL
+                                </span>
+                                <span className="text-xs">
+                                    {fileUploadState === 'loading'
+                                        ? 'Parsing file…'
+                                        : fileUploadState
+                                            ? <span style={{ color: '#F4F0E4' }}>{fileUploadState} — SMILES populated</span>
+                                            : 'Choose file or drag and drop'}
+                                </span>
+                                <input
+                                    type="file"
+                                    accept=".sdf,.mol"
+                                    className="hidden"
+                                    onChange={handleFileUpload}
+                                    disabled={fileUploadState === 'loading'}
+                                />
+                            </label>
+                            {fileError && (
+                                <p className="text-xs mt-2 px-1" style={{ color: '#EC8F8D' }}>
+                                    {fileError}
+                                </p>
                             )}
                         </div>
 

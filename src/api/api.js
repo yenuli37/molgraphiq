@@ -40,3 +40,15 @@ export const fetchDatasets = async () => {
     const response = await api.get('/datasets');
     return response.data;
 };
+
+/**
+ * Parse a .mol/.sdf file and return its SMILES string.
+ * @param {string} filename
+ * @param {string} content  — raw text content of the file
+ * @returns {Promise<{ smiles: string }>}
+ */
+export const parseFile = async (filename, content) => {
+    const response = await api.post('/parse-file', { filename, content });
+    return response.data;
+};
+

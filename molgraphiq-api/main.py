@@ -259,6 +259,28 @@ def explain_endpoint(req: ExplainRequest):
     )
 
 
+@app.post("/parse-file")
+def parse_file(request: dict):
+    """Parse a .mol or .sdf file and return its canonical SMILES string."""
+    filename = request.get("filename", "")
+    content = request.get("content", "")
+
+    try:
+        from rdkit import Chem
+        if filename.endswith(".mol") or filename.endswith(".sdf"):
+            mol = Chem.MolFromMolBlock(content)
+            if mol is None:
+                raise HTTPException(status_code=422, detail="Could not parse molecule file. Check that the file is a valid MDL Molfile or SDF.")
+            smiles = Chem.MolToSmiles(mol)
+            return {"smiles": smiles}
+        else:
+            raise HTTPException(status_code=422, detail="Unsupported file format. Please upload a .mol or .sdf file.")
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=422, detail=str(e))
+
+
 # ──────────────────────────────────────────────────────────────
 # Serve React frontend (only when dist/ exists after npm run build)
 # ──────────────────────────────────────────────────────────────
