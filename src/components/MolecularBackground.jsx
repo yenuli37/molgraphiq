@@ -23,17 +23,17 @@ export default function MolecularBackground() {
 
         // Molecule cluster definitions
         const molecules = [
-            { x: 0.10, y: 0.20, size: 70, speed: 0.35, opacity: 0.32, type: 'hexagon' },
-            { x: 0.85, y: 0.15, size: 90, speed: -0.25, opacity: 0.28, type: 'benzene' },
-            { x: 0.50, y: 0.70, size: 60, speed: 0.45, opacity: 0.26, type: 'hexagon' },
-            { x: 0.75, y: 0.60, size: 80, speed: -0.30, opacity: 0.24, type: 'benzene' },
-            { x: 0.20, y: 0.75, size: 65, speed: 0.28, opacity: 0.30, type: 'hexagon' },
-            { x: 0.90, y: 0.50, size: 55, speed: 0.40, opacity: 0.22, type: 'chain' },
-            { x: 0.35, y: 0.10, size: 75, speed: -0.22, opacity: 0.24, type: 'chain' },
-            { x: 0.60, y: 0.35, size: 50, speed: 0.55, opacity: 0.20, type: 'benzene' },
-            { x: 0.05, y: 0.50, size: 55, speed: -0.18, opacity: 0.22, type: 'hexagon' },
-            { x: 0.45, y: 0.90, size: 65, speed: 0.30, opacity: 0.20, type: 'benzene' },
-            { x: 0.70, y: 0.05, size: 50, speed: -0.35, opacity: 0.25, type: 'chain' },
+            { x: 0.10, y: 0.20, size: 70, speed: 0.35, opacity: 0.15, type: 'hexagon' },
+            { x: 0.85, y: 0.15, size: 90, speed: -0.25, opacity: 0.13, type: 'benzene' },
+            { x: 0.50, y: 0.70, size: 60, speed: 0.45, opacity: 0.12, type: 'hexagon' },
+            { x: 0.75, y: 0.60, size: 80, speed: -0.30, opacity: 0.11, type: 'benzene' },
+            { x: 0.20, y: 0.75, size: 65, speed: 0.28, opacity: 0.14, type: 'hexagon' },
+            { x: 0.90, y: 0.50, size: 55, speed: 0.40, opacity: 0.10, type: 'chain' },
+            { x: 0.35, y: 0.10, size: 75, speed: -0.22, opacity: 0.11, type: 'chain' },
+            { x: 0.60, y: 0.35, size: 50, speed: 0.55, opacity: 0.10, type: 'benzene' },
+            { x: 0.05, y: 0.50, size: 55, speed: -0.18, opacity: 0.10, type: 'hexagon' },
+            { x: 0.45, y: 0.90, size: 65, speed: 0.30, opacity: 0.09, type: 'benzene' },
+            { x: 0.70, y: 0.05, size: 50, speed: -0.35, opacity: 0.11, type: 'chain' },
         ];
 
         function drawHexagon(ctx, cx, cy, r, rotation, opacity) {
@@ -41,7 +41,7 @@ export default function MolecularBackground() {
             ctx.translate(cx, cy);
             ctx.rotate(rotation);
             ctx.strokeStyle = `rgba(68, 161, 148, ${opacity})`;
-            ctx.lineWidth = 1.5;
+            ctx.lineWidth = 1;
             ctx.beginPath();
             for (let i = 0; i < 6; i++) {
                 const angle = (Math.PI / 3) * i;
@@ -62,7 +62,7 @@ export default function MolecularBackground() {
 
             // Outer hexagon
             ctx.strokeStyle = `rgba(68, 161, 148, ${opacity})`;
-            ctx.lineWidth = 1.5;
+            ctx.lineWidth = 1;
             ctx.beginPath();
             for (let i = 0; i < 6; i++) {
                 const angle = (Math.PI / 3) * i;
@@ -98,7 +98,7 @@ export default function MolecularBackground() {
             ctx.translate(cx, cy);
             ctx.rotate(rotation);
             ctx.strokeStyle = `rgba(68, 161, 148, ${opacity})`;
-            ctx.lineWidth = 1.5;
+            ctx.lineWidth = 1;
 
             // Draw zig-zag chain
             const steps = 5;
@@ -144,8 +144,8 @@ export default function MolecularBackground() {
             });
 
             // Floating bond lines connecting molecules
-            ctx.strokeStyle = 'rgba(68, 161, 148, 0.18)';
-            ctx.lineWidth = 0.8;
+            ctx.strokeStyle = 'rgba(68, 161, 148, 0.07)';
+            ctx.lineWidth = 0.5;
             for (let i = 0; i < molecules.length - 1; i++) {
                 const a = molecules[i];
                 const b = molecules[i + 1];
