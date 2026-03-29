@@ -11,26 +11,33 @@ const fadeUp = {
     }),
 };
 
+const stats = [
+    { value: '7', label: 'Benchmark Datasets' },
+    { value: '3', label: 'Random Seeds (mean \u00b1 std)' },
+    { value: '82', label: 'Functional Group Patterns' },
+    { value: '20', label: 'MC Dropout Passes' },
+];
+
 const features = [
     {
-        icon: 'GNN',
-        title: 'Graph Neural Networks',
-        desc: 'Processes molecular topology directly as graphs, with atoms as nodes and bonds as edges.',
+        icon: 'PT',
+        title: 'Pretrained GIN',
+        desc: 'GIN backbone initialized from Hu et al. 2020 checkpoint pretrained on 2 million molecules. Transfers chemical knowledge to low-data tasks.',
     },
     {
-        icon: 'KA',
-        title: 'Knowledge Augmentation',
-        desc: 'Pre-trained on large molecular datasets to transfer chemical domain knowledge.',
+        icon: 'TA',
+        title: 'Task-Adaptive Architecture',
+        desc: 'Set Transformer readout for regression tasks. Functional group auxiliary supervision for classification. Component selection empirically derived from ablation study across 7 configurations.',
     },
     {
-        icon: 'MT',
-        title: 'Multi-Task Prediction',
-        desc: 'Solubility, lipophilicity, toxicity, bioactivity: all from a single unified model.',
+        icon: 'UQ',
+        title: 'Uncertainty Quantification',
+        desc: 'Monte Carlo Dropout with 20 forward passes estimates prediction confidence. Based on Gal & Ghahramani 2016 Bayesian approximation.',
     },
     {
         icon: 'XAI',
-        title: 'GNN Explainability',
-        desc: 'Highlights which molecular substructures drive each prediction via GNNExplainer.',
+        title: 'Gradient Attribution',
+        desc: 'Atom-level importance scores via input gradient saliency. Shows which structural features drive each prediction for interpretable drug design.',
     },
 ];
 
@@ -44,12 +51,13 @@ export default function Home() {
                 className="absolute inset-0 pointer-events-none"
                 style={{
                     background:
-                        'radial-gradient(ellipse 70% 50% at 50% 30%, rgba(68, 161, 148,0.06) 0%, transparent 70%)',
+                        'radial-gradient(ellipse 70% 50% at 50% 30%, rgba(68,161,148,0.06) 0%, transparent 70%)',
                     zIndex: 1,
                 }}
             />
 
             <div className="relative z-10 flex flex-col items-center text-center px-6 pt-36 pb-24">
+
                 {/* Badge */}
                 <motion.div
                     custom={0}
@@ -58,17 +66,17 @@ export default function Home() {
                     animate="visible"
                     className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold mb-8"
                     style={{
-                        background: 'rgba(68, 161, 148,0.1)',
-                        border: '1px solid rgba(68, 161, 148,0.25)',
+                        background: 'rgba(68,161,148,0.1)',
+                        border: '1px solid rgba(68,161,148,0.25)',
                         color: '#44A194',
-                        letterSpacing: '0.05em',
+                        letterSpacing: '0.06em',
                     }}
                 >
                     <span
                         className="w-1.5 h-1.5 rounded-full"
                         style={{ background: '#EC8F8D', boxShadow: '0 0 6px #EC8F8D' }}
                     />
-                    KAGNN-BASED MOLECULAR INTELLIGENCE
+                    Knowledge-Augmented GNN Framework
                 </motion.div>
 
                 {/* Title */}
@@ -93,16 +101,16 @@ export default function Home() {
                     <span className="text-white">IQ</span>
                 </motion.h1>
 
-                {/* Tagline */}
+                {/* Subtitle */}
                 <motion.p
                     custom={2}
                     variants={fadeUp}
                     initial="hidden"
                     animate="visible"
                     className="text-lg md:text-xl font-medium mb-4 max-w-2xl"
-                    style={{ color: 'rgba(244, 240, 228, 0.70)', lineHeight: 1.6 }}
+                    style={{ color: 'rgba(244,240,228,0.70)', lineHeight: 1.6 }}
                 >
-                    Knowledge-Augmented Graph Neural Networks for Drug Discovery
+                    Molecular Property Prediction for Drug Discovery
                 </motion.p>
 
                 {/* Description */}
@@ -112,11 +120,12 @@ export default function Home() {
                     initial="hidden"
                     animate="visible"
                     className="text-sm md:text-base max-w-xl mb-10"
-                    style={{ color: 'rgba(244, 240, 228, 0.50)', lineHeight: 1.8 }}
+                    style={{ color: 'rgba(244,240,228,0.50)', lineHeight: 1.8 }}
                 >
-                    Enter a SMILES string and predict drug-like molecular properties with state-of-the-art
-                    GNN models trained on 7 benchmark datasets spanning solubility, toxicity, bioactivity
-                    and beyond.
+                    Predict drug-like properties from molecular structures using pretrained Graph Neural
+                    Networks. Designed for low-data drug discovery scenarios where traditional methods fail.
+                    Trained on 7 MoleculeNet benchmark datasets with atom-level explanations for every
+                    prediction.
                 </motion.p>
 
                 {/* CTA Buttons */}
@@ -128,10 +137,10 @@ export default function Home() {
                     className="flex flex-col sm:flex-row gap-4"
                 >
                     <Link to="/predict" className="btn-primary no-underline text-sm inline-block">
-                        Run Prediction
+                        Try Prediction
                     </Link>
                     <Link to="/about" className="btn-outline no-underline text-sm inline-block">
-                        Learn More
+                        View Architecture
                     </Link>
                 </motion.div>
 
@@ -141,14 +150,9 @@ export default function Home() {
                     variants={fadeUp}
                     initial="hidden"
                     animate="visible"
-                    className="mt-16 flex flex-wrap justify-center gap-8"
+                    className="mt-16 flex flex-wrap justify-center gap-10"
                 >
-                    {[
-                        { value: '7', label: 'Benchmark Datasets' },
-                        { value: 'GNN', label: 'Graph Neural Network' },
-                        { value: 'GNNExplainer', label: 'Atom Attribution' },
-                        { value: 'SMILES', label: 'Input Format' },
-                    ].map(({ value, label }) => (
+                    {stats.map(({ value, label }) => (
                         <div key={label} className="flex flex-col items-center gap-1">
                             <span
                                 className="text-2xl font-bold"
@@ -175,7 +179,7 @@ export default function Home() {
                     className="divider-cyan w-full max-w-4xl mt-20 mb-16"
                 />
 
-                {/* Feature cards grid */}
+                {/* Feature cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl w-full">
                     {features.map(({ icon, title, desc }, i) => (
                         <motion.div
@@ -186,13 +190,15 @@ export default function Home() {
                             animate="visible"
                             className="glass-card-hover p-6 text-left"
                         >
+                            {/* Icon pill */}
                             <div
-                                className="text-xs font-black mb-3 px-2 py-1 rounded"
+                                className="text-xs font-black mb-3 px-2.5 py-1 rounded-full"
                                 style={{
                                     display: 'inline-block',
                                     background: 'rgba(68,161,148,0.12)',
+                                    border: '1px solid rgba(68,161,148,0.25)',
                                     color: '#44A194',
-                                    letterSpacing: '0.05em',
+                                    letterSpacing: '0.06em',
                                 }}
                             >
                                 {icon}
