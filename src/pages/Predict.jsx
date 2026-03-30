@@ -304,6 +304,125 @@ export default function Predict() {
                     </p>
                 </motion.div>
 
+                {/* How to Use */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.45, delay: 0.03 }}
+                    className="mb-6"
+                >
+                    {/* Trigger row */}
+                    <button
+                        onClick={() => setGuideOpen((o) => !o)}
+                        className="flex items-center gap-2 w-full text-left px-4 py-3 rounded-xl transition-all duration-200"
+                        style={{
+                            background: guideOpen ? 'rgba(68,161,148,0.10)' : 'rgba(68,161,148,0.05)',
+                            border: '1px solid rgba(68,161,148,0.22)',
+                            cursor: 'pointer',
+                        }}
+                    >
+                        <span
+                            className="text-xs font-black w-5 h-5 flex items-center justify-center rounded-full flex-shrink-0"
+                            style={{ background: 'rgba(68,161,148,0.18)', color: '#44A194', border: '1px solid rgba(68,161,148,0.35)' }}
+                        >
+                            ?
+                        </span>
+                        <span className="text-xs font-semibold" style={{ color: '#44A194' }}>How to Use MolGraphIQ</span>
+                        <span
+                            className="ml-auto text-xs transition-transform duration-300"
+                            style={{ color: 'rgba(68,161,148,0.6)', transform: guideOpen ? 'rotate(180deg)' : 'rotate(0deg)', display: 'inline-block' }}
+                        >
+                            &#9660;
+                        </span>
+                    </button>
+
+                    {/* Collapsible body */}
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            maxHeight: guideOpen ? '1200px' : '0px',
+                            transition: 'max-height 0.4s cubic-bezier(0.22,1,0.36,1)',
+                        }}
+                    >
+                        <div
+                            className="rounded-xl mt-1 px-5 py-5 text-xs leading-relaxed"
+                            style={{
+                                background: 'rgba(68,161,148,0.04)',
+                                border: '1px solid rgba(68,161,148,0.15)',
+                                borderTop: 'none',
+                                borderRadius: '0 0 12px 12px',
+                                color: 'rgba(244,240,228,0.65)',
+                            }}
+                        >
+                            {/* Section 1 */}
+                            <p className="font-semibold mb-2" style={{ color: '#F4F0E4' }}>1. Input Methods</p>
+                            <p className="mb-1">You can input a molecule in three ways:</p>
+                            <ul className="mb-4 space-y-2 pl-1">
+                                <li><span style={{ color: '#44A194' }}>SMILES String</span> — paste a molecular SMILES string directly.
+                                    Example: <code className="font-mono" style={{ background: 'rgba(255,255,255,0.06)', padding: '0 4px', borderRadius: 3 }}>CC(=O)Oc1ccccc1C(=O)O</code> for Aspirin.
+                                    Use the quick example buttons below the input for common molecules.</li>
+                                <li><span style={{ color: '#44A194' }}>PubChem CID</span> — enter the numeric PubChem identifier.
+                                    Example: <code className="font-mono" style={{ background: 'rgba(255,255,255,0.06)', padding: '0 4px', borderRadius: 3 }}>2244</code> for Aspirin.
+                                    Find CIDs at <span style={{ color: 'rgba(255,255,255,0.45)' }}>pubchem.ncbi.nlm.nih.gov</span>.</li>
+                                <li><span style={{ color: '#44A194' }}>File Upload</span> — upload a <code className="font-mono" style={{ background: 'rgba(255,255,255,0.06)', padding: '0 4px', borderRadius: 3 }}>.mol</code> or <code className="font-mono" style={{ background: 'rgba(255,255,255,0.06)', padding: '0 4px', borderRadius: 3 }}>.sdf</code> file exported from chemistry software like ChemDraw or MarvinSketch.</li>
+                            </ul>
+
+                            <div className="divider-cyan my-3" />
+
+                            {/* Section 2 */}
+                            <p className="font-semibold mb-2" style={{ color: '#F4F0E4' }}>2. Selecting a Property</p>
+                            <p className="mb-1">Choose which molecular property to predict from the dropdown:</p>
+                            <ul className="mb-4 space-y-1 pl-1">
+                                {[
+                                    ['ESOL', 'Aqueous solubility (log mol/L). Lower = less soluble.'],
+                                    ['Lipophilicity', 'logD at pH 7.4. Higher = more lipophilic.'],
+                                    ['BACE', 'Probability of inhibiting BACE-1 enzyme (Alzheimer target).'],
+                                    ['BBBP', 'Probability of crossing the blood-brain barrier.'],
+                                    ['ClinTox', 'Probability of clinical trial failure due to toxicity.'],
+                                    ['HIV', 'Probability of inhibiting HIV replication.'],
+                                    ['Tox21', 'Probability of toxicity across 12 assay pathways.'],
+                                ].map(([name, desc]) => (
+                                    <li key={name}>
+                                        <span style={{ color: '#44A194' }}>{name}</span>: {desc}
+                                    </li>
+                                ))}
+                            </ul>
+
+                            <div className="divider-cyan my-3" />
+
+                            {/* Section 3 */}
+                            <p className="font-semibold mb-2" style={{ color: '#F4F0E4' }}>3. Understanding Results</p>
+                            <p className="mb-1">After clicking Predict Property:</p>
+                            <ul className="mb-4 space-y-1 pl-1">
+                                <li><span style={{ color: '#44A194' }}>Prediction value</span>: the model's output for the selected property.</li>
+                                <li><span style={{ color: '#44A194' }}>Uncertainty</span>: MC Dropout uncertainty across 20 forward passes. Lower uncertainty means the model is more confident.</li>
+                                <li><span style={{ color: '#44A194' }}>Atom importance</span>: shows which atoms influenced the prediction most. Red atoms = high importance, lighter = lower importance. Numbers match between the molecule visualization and the bar chart.</li>
+                            </ul>
+
+                            <div className="divider-cyan my-3" />
+
+                            {/* Section 4 */}
+                            <p className="font-semibold mb-2" style={{ color: '#F4F0E4' }}>4. What is SMILES?</p>
+                            <p className="mb-2">SMILES (Simplified Molecular Input Line Entry System) is a text representation of a molecule.</p>
+                            <table className="w-full text-xs mb-2" style={{ borderCollapse: 'separate', borderSpacing: '0 2px' }}>
+                                <tbody>
+                                    {[
+                                        ['c1ccccc1', 'Benzene'],
+                                        ['CC(=O)O', 'Acetic acid'],
+                                        ['CC(=O)Oc1ccccc1C(=O)O', 'Aspirin'],
+                                    ].map(([smi, name]) => (
+                                        <tr key={smi}>
+                                            <td className="pr-4 font-mono" style={{ color: '#44A194', background: 'rgba(68,161,148,0.06)', padding: '2px 8px', borderRadius: 4 }}>{smi}</td>
+                                            <td className="pl-3" style={{ color: 'rgba(244,240,228,0.5)' }}>{name}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            <p style={{ color: 'rgba(255,255,255,0.35)' }}>You can get SMILES from PubChem, ChemSpider, or chemistry drawing tools like ChemDraw.</p>
+                        </div>
+                    </div>
+                </motion.div>
+
                 {/* Input Card */}
                 <motion.div
                     initial={{ opacity: 0, y: 25 }}
