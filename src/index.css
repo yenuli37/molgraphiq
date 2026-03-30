@@ -9,6 +9,12 @@
    #44A194  jade teal — primary accent
    #537D96  steel blue — secondary accent
    #EC8F8D  salmon coral — highlight / CTA
+
+   Extended palette (2024):
+   #ADB2D4  muted lavender — soft secondary borders / badges
+   #C7D9DD  dusty blue-gray — input focus, scrollbar
+   #D5E5D5  soft sage — dividers, success tones
+   #EEF1DA  warm off-white — heading text weight
 ──────────────────────────────────────────────────────────── */
 :root {
   --color-bg: #061E29;
@@ -18,6 +24,12 @@
   --color-accent-coral: #EC8F8D;
   --color-text: #F4F0E4;
   --color-muted: rgba(244, 240, 228, 0.55);
+
+  /* Extended palette */
+  --color-lavender: #ADB2D4;
+  --color-dusty-blue: #C7D9DD;
+  --color-sage: #D5E5D5;
+  --color-offwhite: #EEF1DA;
 }
 
 @layer base {
@@ -50,12 +62,13 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgba(68, 161, 148, 0.40);
+    background: rgba(199, 217, 221, 0.45);
+    /* --color-dusty-blue */
     border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(68, 161, 148, 0.65);
+    background: rgba(199, 217, 221, 0.70);
   }
 }
 
@@ -64,7 +77,8 @@
     background: rgba(83, 125, 150, 0.10);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(244, 240, 228, 0.10);
+    border: 1px solid rgba(173, 178, 212, 0.14);
+    /* --color-lavender */
     border-radius: 16px;
   }
 
@@ -74,15 +88,17 @@
 
   .glass-card-hover:hover {
     background: rgba(83, 125, 150, 0.18);
-    border-color: rgba(244, 240, 228, 0.18);
-    box-shadow: 0 0 30px rgba(68, 161, 148, 0.10);
+    border-color: rgba(173, 178, 212, 0.28);
+    /* --color-lavender */
+    box-shadow: 0 0 30px rgba(213, 229, 213, 0.10);
+    /* --color-sage */
   }
 
-  /* Primary button — jade → steel blue gradient */
+  /* Primary button — jade → dusty-blue gradient */
   .btn-primary {
-    background: linear-gradient(135deg, #44A194 0%, #537D96 100%);
-    color: #F4F0E4;
-    font-weight: 600;
+    background: linear-gradient(135deg, #44A194 0%, #C7D9DD 100%);
+    color: #061E29;
+    font-weight: 700;
     padding: 0.75rem 2rem;
     border-radius: 10px;
     border: none;
@@ -93,7 +109,8 @@
 
   .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(68, 161, 148, 0.38);
+    box-shadow: 0 8px 25px rgba(199, 217, 221, 0.30);
+    /* dusty-blue glow */
   }
 
   .btn-primary:active {
@@ -143,8 +160,9 @@
   }
 
   .input-glass:focus {
-    border-color: rgba(68, 161, 148, 0.60);
-    box-shadow: 0 0 0 3px rgba(68, 161, 148, 0.12);
+    border-color: rgba(199, 217, 221, 0.70);
+    /* --color-dusty-blue */
+    box-shadow: 0 0 0 3px rgba(199, 217, 221, 0.12);
   }
 
   .input-glass::placeholder {
@@ -160,7 +178,8 @@
   /* Accent divider */
   .divider-cyan {
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(68, 161, 148, 0.40), transparent);
+    background: linear-gradient(90deg, transparent, rgba(213, 229, 213, 0.35), rgba(173, 178, 212, 0.35), transparent);
+    /* sage → lavender blend */
   }
 }
 
@@ -179,5 +198,38 @@
 
   .bg-navy-950 {
     background-color: #061E29;
+  }
+
+  /* Extended palette utilities */
+  .text-lavender {
+    color: var(--color-lavender);
+  }
+
+  .text-dusty-blue {
+    color: var(--color-dusty-blue);
+  }
+
+  .text-sage {
+    color: var(--color-sage);
+  }
+
+  .text-offwhite {
+    color: var(--color-offwhite);
+  }
+
+  .border-lavender {
+    border-color: rgba(173, 178, 212, 0.35);
+  }
+
+  .border-sage {
+    border-color: rgba(213, 229, 213, 0.35);
+  }
+
+  /* Cooler gradient: lavender → dusty-blue */
+  .text-gradient-cool {
+    background: linear-gradient(135deg, var(--color-offwhite) 0%, var(--color-lavender) 50%, var(--color-dusty-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }

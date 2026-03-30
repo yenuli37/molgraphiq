@@ -143,8 +143,8 @@ export default function MolecularBackground() {
                 }
             });
 
-            // Floating bond lines connecting molecules
-            ctx.strokeStyle = 'rgba(68, 161, 148, 0.07)';
+            // Floating bond lines connecting molecules — dusty-blue (#C7D9DD)
+            ctx.strokeStyle = 'rgba(199, 217, 221, 0.09)';
             ctx.lineWidth = 0.5;
             for (let i = 0; i < molecules.length - 1; i++) {
                 const a = molecules[i];
