@@ -1,16 +1,31 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# MolGraphIQ
 
-Currently, two official plugins are available:
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19325518.svg)](https://doi.org/10.5281/zenodo.19325518)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## React Compiler
+**Knowledge-Augmented Graph Neural Networks for Molecular Property Prediction**
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+A task-adaptive GNN framework designed for low-data drug discovery scenarios. Combines pretrained GIN representations, Set Transformer readout, and functional group auxiliary supervision across 7 MoleculeNet benchmark datasets.
 
-## Expanding the ESLint configuration
+## Live Demo
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+https://molgraphiq-51609780733.us-central1.run.app
+
+## Publications
+
+- Accepted at ICAIIC 2026 (IEEE Xplore forthcoming)
+
+- Selected for review at ICCSP 2026
+
+## Citation
+
+If you use this work please cite:
+
+Indigahawela Gamage, Y. B. (2026). MolGraphIQ: Knowledge-Augmented Graph Neural Networks for Molecular Property Prediction. Zenodo. https://doi.org/10.5281/zenodo.19325518
+
+## License
+
+MIT License — see LICENSE file for details.
+

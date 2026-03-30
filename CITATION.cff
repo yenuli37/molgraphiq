@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Indigahawela Gamage
+    given-names: Yenuli Bimanya
+    affiliation: IIT / University of Westminster
+title: "MolGraphIQ: Knowledge-Augmented Graph Neural Networks for Molecular Property Prediction"
+version: 1.0.0
+date-released: 2026-03-01
+url: "https://github.com/yenuli37/molgraphiq"
+doi: 10.5281/zenodo.19325518
+license: MIT
