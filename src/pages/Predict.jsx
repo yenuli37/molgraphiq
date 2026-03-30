@@ -267,6 +267,8 @@ export default function Predict() {
         return `${val?.toFixed ? val.toFixed(3) : val} ${unit}`;
     };
 
+    const [guideOpen, setGuideOpen] = useState(false);
+
     return (
         <div className="relative min-h-screen" style={{ background: '#061E29' }}>
             <MolecularBackground />
