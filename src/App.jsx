@@ -1,20 +1,12 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect, useState, useRef } from 'react';
 import Navbar from './components/Navbar';
 
-// Lazy-loaded routes — each page (and its deps like recharts) only
-// downloads when the user actually navigates to that route.
+// Lazy-loaded routes — each page (and its deps like recharts/framer-motion)
+// only downloads when the user navigates to that route.
 const Home = lazy(() => import('./pages/Home'));
 const Predict = lazy(() => import('./pages/Predict'));
 const About = lazy(() => import('./pages/About'));
-
-const pageTransition = {
-  initial: { opacity: 0, y: 8 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -8 },
-  transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] },
-};
 
 // Minimal fallback — matches skeleton aesthetic
 function RouteFallback() {
@@ -51,43 +43,44 @@ function RouteFallback() {
   );
 }
 
+/**
+ * Pure-CSS page transition wrapper.
+ * Fades + slides in on mount via CSS keyframe — no framer-motion needed
+ * in the App shell, keeping it out of the critical bundle.
+ */
+function PageTransition({ children }) {
+  return <div className="page-transition">{children}</div>;
+}
+
 function AnimatedRoutes() {
   const location = useLocation();
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route
-          path="/"
-          element={
-            <Suspense fallback={<RouteFallback />}>
-              <motion.div {...pageTransition}>
-                <Home />
-              </motion.div>
-            </Suspense>
-          }
-        />
-        <Route
-          path="/predict"
-          element={
-            <Suspense fallback={<RouteFallback />}>
-              <motion.div {...pageTransition}>
-                <Predict />
-              </motion.div>
-            </Suspense>
-          }
-        />
-        <Route
-          path="/about"
-          element={
-            <Suspense fallback={<RouteFallback />}>
-              <motion.div {...pageTransition}>
-                <About />
-              </motion.div>
-            </Suspense>
-          }
-        />
-      </Routes>
-    </AnimatePresence>
+    <Routes location={location} key={location.pathname}>
+      <Route
+        path="/"
+        element={
+          <Suspense fallback={<RouteFallback />}>
+            <PageTransition><Home /></PageTransition>
+          </Suspense>
+        }
+      />
+      <Route
+        path="/predict"
+        element={
+          <Suspense fallback={<RouteFallback />}>
+            <PageTransition><Predict /></PageTransition>
+          </Suspense>
+        }
+      />
+      <Route
+        path="/about"
+        element={
+          <Suspense fallback={<RouteFallback />}>
+            <PageTransition><About /></PageTransition>
+          </Suspense>
+        }
+      />
+    </Routes>
   );
 }
 

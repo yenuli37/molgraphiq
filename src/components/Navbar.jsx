@@ -1,5 +1,4 @@
 import { Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
 
 const navLinks = [
     { path: '/', label: 'Home' },
@@ -49,15 +48,19 @@ export default function Navbar() {
                             <Link
                                 key={path}
                                 to={path}
-                                className="relative px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 no-underline"
-                                style={{ color: isActive ? '#44A194' : 'rgba(244, 240, 228,0.55)' }}
+                                className="relative px-4 py-2 rounded-lg text-sm font-medium no-underline"
+                                style={{
+                                    color: isActive ? '#44A194' : 'rgba(244, 240, 228,0.55)',
+                                    transition: 'color 0.2s ease',
+                                }}
                             >
                                 {isActive && (
-                                    <motion.span
-                                        layoutId="nav-active-pill"
-                                        className="absolute inset-0 rounded-lg"
-                                        style={{ background: 'rgba(68, 161, 148,0.10)', border: '1px solid rgba(68, 161, 148,0.25)' }}
-                                        transition={{ type: 'spring', bounce: 0.25, duration: 0.4 }}
+                                    <span
+                                        className="absolute inset-0 rounded-lg nav-pill-active"
+                                        style={{
+                                            background: 'rgba(68, 161, 148,0.10)',
+                                            border: '1px solid rgba(68, 161, 148,0.25)',
+                                        }}
                                     />
                                 )}
                                 <span className="relative z-10">{label}</span>
