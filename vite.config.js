@@ -9,5 +9,19 @@ export default defineConfig({
       'Cache-Control': 'public, max-age=31536000',
     },
   },
+  build: {
+    chunkSizeWarningLimit: 1000,
+    rolldownOptions: {
+      output: {
+        advancedChunks: {
+          groups: [
+            { name: 'react-vendor', test: /node_modules\/(react|react-dom)/ },
+            { name: 'chart-vendor', test: /node_modules\/recharts/ },
+            { name: 'icons', test: /node_modules\/lucide-react/ },
+          ],
+        },
+      },
+    },
+  },
 })
 
