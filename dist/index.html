@@ -7,19 +7,83 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description"
     content="MolGraphIQ — Knowledge-Augmented Graph Neural Networks for Drug Discovery. Predict molecular properties from SMILES strings instantly." />
-  <meta name="theme-color" content="#0a0f1e" />
+  <meta name="theme-color" content="#061E29" />
   <title>MolGraphIQ — Molecular Property Prediction</title>
+
+  <!-- Font: non-render-blocking via media="print" trick -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <script type="module" crossorigin src="/assets/index-BEV4HHVW.js"></script>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=optional"
+    media="print" onload="this.media='all'" />
+  <noscript>
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=optional" />
+  </noscript>
+
+  <!-- Skeleton styles — shown before React bundle loads -->
+  <style>
+    #skeleton {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: #061E29;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    #skeleton .logo {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #44A194;
+      margin-bottom: 1.5rem;
+    }
+
+    #skeleton .bar-wrap {
+      width: 200px;
+      height: 3px;
+      background: rgba(68, 161, 148, 0.12);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    #skeleton .bar {
+      width: 40%;
+      height: 100%;
+      background: linear-gradient(90deg, #44A194, #C7D9DD);
+      border-radius: 4px;
+      animation: slide 1.2s ease-in-out infinite;
+    }
+
+    @keyframes slide {
+      0% {
+        transform: translateX(-100%);
+      }
+
+      100% {
+        transform: translateX(350%);
+      }
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/index-BGSq_G1z.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-COnpUsM8.js">
-  <link rel="modulepreload" crossorigin href="/assets/react-vendor-35vebzkN.js">
-  <link rel="modulepreload" crossorigin href="/assets/chart-vendor-D2qYeUuK.js">
-  <link rel="stylesheet" crossorigin href="/assets/index-Di5TnyRn.css">
+  <link rel="modulepreload" crossorigin href="/assets/react-vendor-CHn9Vu4V.js">
+  <link rel="modulepreload" crossorigin href="/assets/proxy-C6kX5gV1.js">
+  <link rel="stylesheet" crossorigin href="/assets/index-z84zCtFH.css">
 </head>
 
 <body>
-  <div id="root"></div>
+  <div id="root">
+    <!-- Skeleton replaced by React on mount -->
+    <div id="skeleton">
+      <div class="logo">MolGraphIQ</div>
+      <div class="bar-wrap">
+        <div class="bar"></div>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

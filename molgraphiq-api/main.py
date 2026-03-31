@@ -323,19 +323,35 @@ def get_pubchem_smiles(cid: str):
 
 # ──────────────────────────────────────────────────────────────
 # Serve React frontend (only when dist/ exists after npm run build)
+# Cache policy:
+#   /assets/*  → immutable (filenames contain content hashes)
+#   index.html → no-cache  (must re-fetch to pick up new hashes)
 # ──────────────────────────────────────────────────────────────
 
 dist_path = os.path.join(os.path.dirname(__file__), "..", "dist")
 if os.path.exists(dist_path):
-    app.mount("/assets", StaticFiles(directory=os.path.join(dist_path, "assets")), name="assets")
+    from starlette.middleware import Middleware
+    from starlette.responses import Response
+
+    class CachedStaticFiles(StaticFiles):
+        """StaticFiles subclass that adds long-lived cache headers for hashed assets."""
+        async def get_response(self, path, scope):
+            response = await super().get_response(path, scope)
+            response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+            return response
+
+    app.mount("/assets", CachedStaticFiles(directory=os.path.join(dist_path, "assets")), name="assets")
 
     @app.get("/{full_path:path}")
     async def serve_frontend(full_path: str):
         """SPA fallback — serve index.html for all non-API routes."""
         file_path = os.path.join(dist_path, full_path)
         if os.path.isfile(file_path):
-            return FileResponse(file_path)
-        return FileResponse(os.path.join(dist_path, "index.html"))
+            return FileResponse(file_path, headers={"Cache-Control": "no-cache"})
+        return FileResponse(
+            os.path.join(dist_path, "index.html"),
+            headers={"Cache-Control": "no-cache"},
+        )
 
 
 # ──────────────────────────────────────────────────────────────

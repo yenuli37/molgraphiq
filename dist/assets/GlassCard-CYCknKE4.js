@@ -1,0 +1,1 @@
+import{i as e}from"./react-vendor-CHn9Vu4V.js";var t=e();function n({children:e,className:n=``,glow:r=!1,style:i={}}){return(0,t.jsx)(`div`,{className:`glass-card ${n}`,style:{...r?{boxShadow:`0 0 40px rgba(68, 161, 148, 0.10), 0 4px 40px rgba(0,0,0,0.4)`}:{boxShadow:`0 4px 40px rgba(0,0,0,0.3)`},...i},children:e})}export{n as t};
